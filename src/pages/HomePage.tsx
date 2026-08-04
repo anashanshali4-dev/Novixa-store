@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 import {
-  ArrowRight, Sparkles, TrendingUp, Shield, Zap, Star, Quote,
-  Check, ArrowUpRight, Download, Users, Package,
+  ArrowRight, Sparkles, Star, Quote, Check, Shield, Zap,
 } from 'lucide-react';
 import { useApp } from '@/store/AppContext';
 import { products, categories, reviews, stats, clientLogos, services } from '@/data/store';
@@ -9,7 +8,7 @@ import { ProductCard } from '@/components/shared/ProductCard';
 import { SectionHeading } from '@/components/shared/SectionHeading';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui';
-import { HeroScene } from '@/components/HeroScene';
+import { CinematicExperience } from '@/components/cinematic/CinematicExperience';
 
 export function HomePage() {
   const { navigate, setAiOpen } = useApp();
@@ -18,20 +17,28 @@ export function HomePage() {
 
   return (
     <div>
-      {/* Cinematic hero */}
-      <HeroScene />
+      {/* ── Cinematic journey — 9 scenes, scroll-driven ── */}
+      <CinematicExperience />
+
+      {/* ── Post-cinematic: the marketplace revealed ── */}
 
       {/* Stats bar */}
-      <section className="relative py-16 px-4 lg:px-6">
+      <section className="relative py-20 px-4 lg:px-6 bg-[#050505]">
         <div className="max-w-[1400px] mx-auto">
-          <div className="rounded-3xl p-8 grid grid-cols-2 md:grid-cols-4 gap-6" style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%)', border: '1px solid rgba(255,255,255,0.06)' }}>
+          <div
+            className="rounded-3xl p-8 grid grid-cols-2 md:grid-cols-4 gap-6"
+            style={{
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%)',
+              border: '1px solid rgba(255,255,255,0.06)',
+            }}
+          >
             {stats.map((stat, i) => (
               <motion.div
                 key={stat.label}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
+                transition={{ delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
                 className="text-center"
               >
                 <p className="text-2xl md:text-3xl font-bold tracking-tightest" style={{ color: stat.color }}>
@@ -60,13 +67,17 @@ export function HomePage() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.05 }}
+                transition={{ delay: i * 0.05, ease: [0.22, 1, 0.36, 1] }}
                 whileHover={{ y: -4 }}
                 onClick={() => navigate(`/category/${cat.id}`)}
-                className="glass-card rounded-2xl p-5 text-center group cursor-pointer"
+                className="rounded-2xl p-5 text-center group cursor-pointer transition-all duration-500"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)',
+                  border: '1px solid rgba(255,255,255,0.06)',
+                }}
               >
                 <div
-                  className="w-12 h-12 rounded-xl mx-auto mb-3 flex items-center justify-center group-hover:scale-110 transition-transform"
+                  className="w-12 h-12 rounded-xl mx-auto mb-3 flex items-center justify-center group-hover:scale-110 transition-transform duration-500"
                   style={{ background: `${cat.color}15`, border: `1px solid ${cat.color}20` }}
                 >
                   <Icon size={22} style={{ color: cat.color }} />
@@ -84,7 +95,7 @@ export function HomePage() {
         <div className="flex items-end justify-between mb-8">
           <div>
             <span className="inline-block text-2xs font-semibold uppercase tracking-ultra text-novixa-blue mb-2">Featured</span>
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tightest text-gradient">Premium Selections</h2>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tightest text-novixa-white">Premium Selections</h2>
           </div>
           <Button variant="ghost" onClick={() => navigate('/products')} rightIcon={<ArrowRight size={16} />}>
             View All
@@ -104,15 +115,20 @@ export function HomePage() {
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="relative glass-strong rounded-4xl p-8 md:p-12 overflow-hidden"
+            transition={{ ease: [0.22, 1, 0.36, 1] }}
+            className="relative rounded-4xl p-8 md:p-12 overflow-hidden"
+            style={{
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)',
+              border: '1px solid rgba(255,255,255,0.08)',
+            }}
           >
-            <div className="absolute inset-0 opacity-30" style={{ background: 'radial-gradient(circle at 30% 50%, rgba(0,153,255,0.15) 0%, transparent 50%), radial-gradient(circle at 70% 50%, rgba(124,58,237,0.15) 0%, transparent 50%)' }} />
+            <div className="absolute inset-0 opacity-20" style={{ background: 'radial-gradient(circle at 30% 50%, rgba(0,153,255,0.12) 0%, transparent 50%)' }} />
             <div className="relative flex flex-col md:flex-row items-center gap-8">
               <div className="flex-1">
                 <Badge variant="info" className="mb-3">
                   <Sparkles size={10} /> AI-Powered
                 </Badge>
-                <h2 className="text-3xl md:text-4xl font-bold tracking-tightest text-gradient mb-3">
+                <h2 className="text-3xl md:text-4xl font-bold tracking-tightest text-novixa-white mb-3">
                   Your AI Shopping Assistant
                 </h2>
                 <p className="text-sm text-novixa-muted font-light mb-6 max-w-lg">
@@ -139,8 +155,11 @@ export function HomePage() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.1 }}
-                    className="glass rounded-2xl p-4 text-center"
-                    style={{ boxShadow: `0 0 20px ${model.color}20` }}
+                    className="rounded-2xl p-4 text-center"
+                    style={{
+                      background: 'rgba(255,255,255,0.03)',
+                      border: '1px solid rgba(255,255,255,0.06)',
+                    }}
                   >
                     <div className="w-10 h-10 rounded-xl mx-auto mb-2 flex items-center justify-center" style={{ background: `${model.color}15` }}>
                       <Zap size={18} style={{ color: model.color }} />
@@ -159,7 +178,7 @@ export function HomePage() {
         <div className="flex items-end justify-between mb-8">
           <div>
             <span className="inline-block text-2xs font-semibold uppercase tracking-ultra text-amber-400 mb-2">Trending</span>
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tightest text-gradient">Bestsellers</h2>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tightest text-novixa-white">Bestsellers</h2>
           </div>
           <Button variant="ghost" onClick={() => navigate('/products')} rightIcon={<ArrowRight size={16} />}>
             View All
@@ -188,13 +207,17 @@ export function HomePage() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.05 }}
+                transition={{ delay: i * 0.05, ease: [0.22, 1, 0.36, 1] }}
                 whileHover={{ y: -4 }}
                 onClick={() => navigate(`/service/${service.id}`)}
-                className="glass-card rounded-2xl p-6 cursor-pointer group"
+                className="rounded-2xl p-6 cursor-pointer group transition-all duration-500"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)',
+                  border: '1px solid rgba(255,255,255,0.06)',
+                }}
               >
                 <div
-                  className="w-12 h-12 rounded-xl mb-4 flex items-center justify-center group-hover:scale-110 transition-transform"
+                  className="w-12 h-12 rounded-xl mb-4 flex items-center justify-center group-hover:scale-110 transition-transform duration-500"
                   style={{ background: `${service.color}15`, border: `1px solid ${service.color}20` }}
                 >
                   <Icon size={22} style={{ color: service.color }} />
@@ -241,8 +264,12 @@ export function HomePage() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.05 }}
-                className="glass-card rounded-2xl p-5"
+                transition={{ delay: i * 0.05, ease: [0.22, 1, 0.36, 1] }}
+                className="rounded-2xl p-5"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)',
+                  border: '1px solid rgba(255,255,255,0.06)',
+                }}
               >
                 <Quote size={20} className="text-novixa-blue/40 mb-3" />
                 <p className="text-sm text-novixa-white font-light leading-relaxed mb-4">"{review.content}"</p>
@@ -281,8 +308,12 @@ export function HomePage() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="glass-card rounded-2xl p-6 flex items-center gap-4"
+                transition={{ delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                className="rounded-2xl p-6 flex items-center gap-4"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)',
+                  border: '1px solid rgba(255,255,255,0.06)',
+                }}
               >
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style={{ background: `${item.color}15`, border: `1px solid ${item.color}20` }}>
                   <Icon size={22} style={{ color: item.color }} />
@@ -304,11 +335,16 @@ export function HomePage() {
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="relative glass-strong rounded-4xl p-10 md:p-16 text-center overflow-hidden"
+            transition={{ ease: [0.22, 1, 0.36, 1] }}
+            className="relative rounded-4xl p-10 md:p-16 text-center overflow-hidden"
+            style={{
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)',
+              border: '1px solid rgba(255,255,255,0.08)',
+            }}
           >
-            <div className="absolute inset-0 opacity-30" style={{ background: 'radial-gradient(circle at 50% 0%, rgba(0,153,255,0.2) 0%, transparent 50%)' }} />
+            <div className="absolute inset-0 opacity-20" style={{ background: 'radial-gradient(circle at 50% 0%, rgba(0,153,255,0.15) 0%, transparent 50%)' }} />
             <div className="relative">
-              <h2 className="text-3xl md:text-5xl font-bold tracking-tightest text-gradient mb-4">
+              <h2 className="text-3xl md:text-5xl font-bold tracking-tightest text-novixa-white mb-4">
                 Start Building with Novixa
               </h2>
               <p className="text-sm text-novixa-muted font-light mb-8 max-w-lg mx-auto">
