@@ -6,6 +6,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { useApp } from '@/store/AppContext';
+import { useI18n } from '@/i18n/I18nContext';
 import { products } from '@/data/store';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -25,10 +26,11 @@ const LAYOUT = [
 
 export function ArtifactGallery() {
   const { navigate } = useApp();
+  const { t, isRTL } = useI18n();
   const galleryProducts = products.slice(0, 9);
 
   return (
-    <section className="relative py-32 px-4 lg:px-6 overflow-hidden">
+    <section className="relative py-32 px-4 lg:px-6 overflow-hidden" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Section header */}
       <div className="max-w-6xl mx-auto mb-20 text-center">
         <motion.span
@@ -38,7 +40,7 @@ export function ArtifactGallery() {
           viewport={{ once: true }}
           transition={{ duration: 0.6, ease: EASE }}
         >
-          Featured Artifacts
+          {t.galleryLabel}
         </motion.span>
         <motion.h2
           className="font-display font-bold tracking-display text-atelier-white"
@@ -48,7 +50,7 @@ export function ArtifactGallery() {
           viewport={{ once: true }}
           transition={{ duration: 0.8, ease: EASE }}
         >
-          Curated pieces, <span className="text-gradient-trio">floating in space</span>
+          {t.galleryTitle1} <span className="text-gradient-trio">{t.galleryTitle2}</span>
         </motion.h2>
         <motion.p
           className="mt-4 text-base text-atelier-white-soft/50 font-light max-w-lg mx-auto"
@@ -57,7 +59,7 @@ export function ArtifactGallery() {
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.6 }}
         >
-          Not a grid. A gallery. Each artifact floats at its own depth, lit like a museum piece.
+          {t.gallerySub}
         </motion.p>
       </div>
 
@@ -160,7 +162,7 @@ function ArtifactCard({
             </div>
             {product.bestseller && (
               <span className="text-3xs font-mono uppercase tracking-wider px-2 py-0.5 rounded-full" style={{ background: `${product.color}15`, color: product.color }}>
-                Bestseller
+                {t.bestseller}
               </span>
             )}
           </div>
@@ -197,10 +199,10 @@ function ArtifactCard({
                 style={{ pointerEvents: hovered ? 'auto' : 'none' }}
               >
                 <button className="flex items-center gap-1 text-2xs font-medium text-atelier-white-soft px-2.5 py-1.5 rounded-full glass hover:bg-white/10 transition-colors">
-                  <Eye size={11} /> View
+                  <Eye size={11} /> {t.view}
                 </button>
                 <button className="flex items-center gap-1 text-2xs font-medium text-white px-2.5 py-1.5 rounded-full" style={{ background: product.color, boxShadow: `0 0 15px ${product.color}40` }}>
-                  <ShoppingBag size={11} /> Add
+                  <ShoppingBag size={11} /> {t.add}
                 </button>
               </motion.div>
             </motion.div>

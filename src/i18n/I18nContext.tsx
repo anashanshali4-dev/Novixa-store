@@ -12,7 +12,7 @@ interface I18nState {
 const I18nContext = createContext<I18nState | null>(null);
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Lang>('en');
+  const [lang, setLangState] = useState<Lang>('ar');
 
   const setLang = useCallback((l: Lang) => {
     setLangState(l);

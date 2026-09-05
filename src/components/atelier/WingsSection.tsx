@@ -5,6 +5,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { useApp } from '@/store/AppContext';
+import { useI18n } from '@/i18n/I18nContext';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -28,6 +29,7 @@ const WINGS: Wing[] = [
 ];
 
 export function WingsSection() {
+  const { t, isRTL } = useI18n();
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -40,17 +42,17 @@ export function WingsSection() {
 
   const [activeWing, setActiveWing] = useState(0);
 
-  // Track active wing
-  useScroll({
-    target: ref,
-    offset: ['start start', 'end end'],
-  }).scrollYProgress.on('change', (v) => {
-    const idx = Math.min(Math.floor(v * wingCount), wingCount - 1);
-    setActiveWing(idx);
-  });
+  // Track active wing via scroll
+  useEffect(() => {
+    const unsub = scrollYProgress.on('change', (v) => {
+      const idx = Math.min(Math.floor(v * wingCount), wingCount - 1);
+      setActiveWing(idx);
+    });
+    return () => unsub();
+  }, [scrollYProgress, wingCount]);
 
   return (
-    <section ref={ref} className="relative" style={{ height: `${wingCount * 100}vh` }}>
+    <section ref={ref} className="relative" style={{ height: `${wingCount * 100}vh` }} dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="sticky top-0 h-screen w-full overflow-hidden flex items-center">
         {/* Ambient background shift per wing */}
         <AnimatePresence mode="sync">
@@ -111,7 +113,7 @@ export function WingsSection() {
                       <Icon size={26} style={{ color: wing.color }} strokeWidth={1.4} />
                     </div>
                     <span className="text-3xs font-mono tracking-[0.25em] uppercase" style={{ color: wing.color }}>
-                      Wing {String(i + 1).padStart(2, '0')} / {String(wingCount).padStart(2, '0')}
+                      {isRTL ? 'جناح' : 'Wing'} {String(i + 1).padStart(2, '0')} / {String(wingCount).padStart(2, '0')}
                     </span>
                   </motion.div>
 
@@ -148,7 +150,7 @@ export function WingsSection() {
                       ))}
                     </div>
                     <span className="text-sm font-mono" style={{ color: wing.color }}>
-                      {wing.count} assets
+                      {wing.count} {t.wingAssets}
                     </span>
                   </motion.div>
                 </div>
@@ -188,7 +190,7 @@ export function WingsSection() {
         </div>
 
         {/* Progress indicator — vertical light line on right */}
-        <div className="absolute right-6 top-1/2 -translate-y-1/2 z-20 hidden md:flex flex-col gap-3">
+        <div className="absolute top-1/2 -translate-y-1/2 z-20 hidden md:flex flex-col gap-3" style={isRTL ? { left: 24 } : { right: 24 }}>
           {WINGS.map((_, i) => (
             <div
               key={i}
@@ -205,7 +207,7 @@ export function WingsSection() {
         {/* Section label */}
         <div className="absolute top-8 left-1/2 -translate-x-1/2 z-20">
           <span className="text-3xs font-mono tracking-[0.3em] uppercase text-atelier-muted">
-            The Wings
+            {t.wingsLabel}
           </span>
         </div>
       </div>

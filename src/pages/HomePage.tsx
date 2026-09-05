@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { AtelierHero } from '@/components/atelier/AtelierHero';
 import { WingsSection } from '@/components/atelier/WingsSection';
 import { ArtifactGallery } from '@/components/atelier/ArtifactGallery';
@@ -12,14 +11,6 @@ import {
 import { ExitPortal } from '@/components/atelier/AtelierSections';
 
 export function HomePage() {
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setLoaded(true), 100);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (!loaded) return null;
 
   return (
     <div className="relative">

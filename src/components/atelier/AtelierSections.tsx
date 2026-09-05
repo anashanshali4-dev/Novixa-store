@@ -6,19 +6,18 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { useApp } from '@/store/AppContext';
+import { useI18n } from '@/i18n/I18nContext';
 import { products, reviews } from '@/data/store';
 import { MagneticButton } from './AtelierCore';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-// ──────────────────────────────────────────────
-// SHOP TEASER — bridges cinematic to practical
-// ──────────────────────────────────────────────
 export function ShopTeaser() {
   const { navigate } = useApp();
+  const { t, isRTL } = useI18n();
 
   return (
-    <section className="relative py-32 px-4 lg:px-6 overflow-hidden">
+    <section className="relative py-32 px-4 lg:px-6 overflow-hidden" dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-16">
           <motion.span
@@ -28,7 +27,7 @@ export function ShopTeaser() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, ease: EASE }}
           >
-            The Full Collection
+            {t.shopLabel}
           </motion.span>
           <motion.h2
             className="font-display font-bold tracking-display text-atelier-white"
@@ -38,11 +37,10 @@ export function ShopTeaser() {
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: EASE }}
           >
-            Browse <span className="text-gradient-cyan">500+ digital assets</span>
+            {t.shopTitle1} <span className="text-gradient-cyan">{t.shopTitle2}</span>
           </motion.h2>
         </div>
 
-        {/* Preview grid — 4 items */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
           {products.slice(4, 8).map((product, i) => {
             const Icon = product.icon;
@@ -71,11 +69,10 @@ export function ShopTeaser() {
           })}
         </div>
 
-        {/* CTA */}
         <div className="text-center">
           <MagneticButton onClick={() => navigate('/products')} variant="primary">
-            Explore All Assets
-            <ArrowRight size={16} />
+            {t.shopCta}
+            <ArrowRight size={16} className={isRTL ? 'rotate-180' : ''} />
           </MagneticButton>
         </div>
       </div>
@@ -83,17 +80,8 @@ export function ShopTeaser() {
   );
 }
 
-// ──────────────────────────────────────────────
-// LIGHT PATH — How it works, glowing path draws on scroll
-// ──────────────────────────────────────────────
-const STEPS: { icon: LucideIcon; title: string; desc: string; color: string }[] = [
-  { icon: Search, title: 'Browse', desc: 'Explore curated wings of premium digital assets', color: '#7B5CFF' },
-  { icon: CreditCard, title: 'Purchase', desc: 'Secure checkout with instant processing', color: '#3FE0D0' },
-  { icon: Download, title: 'Instant Download', desc: 'Access your files immediately after purchase', color: '#FFC15E' },
-  { icon: MousePointerClick, title: 'Use & Create', desc: 'Deploy in your projects and start creating', color: '#7B5CFF' },
-];
-
 export function LightPath() {
+  const { t, isRTL } = useI18n();
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -101,8 +89,15 @@ export function LightPath() {
   });
   const pathScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
+  const STEPS: { icon: LucideIcon; title: string; desc: string; color: string }[] = [
+    { icon: Search, title: t.step01Title, desc: t.step01Desc, color: '#7B5CFF' },
+    { icon: CreditCard, title: t.step02Title, desc: t.step02Desc, color: '#3FE0D0' },
+    { icon: Download, title: t.step03Title, desc: t.step03Desc, color: '#FFC15E' },
+    { icon: MousePointerClick, title: t.step04Title, desc: t.step04Desc, color: '#7B5CFF' },
+  ];
+
   return (
-    <section ref={ref} className="relative py-32 px-4 lg:px-6 overflow-hidden">
+    <section ref={ref} className="relative py-32 px-4 lg:px-6 overflow-hidden" dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-20">
           <motion.span
@@ -112,7 +107,7 @@ export function LightPath() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, ease: EASE }}
           >
-            How It Works
+            {t.pathLabel}
           </motion.span>
           <motion.h2
             className="font-display font-bold tracking-display text-atelier-white"
@@ -122,13 +117,11 @@ export function LightPath() {
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: EASE }}
           >
-            Follow the <span className="text-gradient-trio">light path</span>
+            {t.pathTitle1} <span className="text-gradient-trio">{t.pathTitle2}</span>
           </motion.h2>
         </div>
 
-        {/* Path with steps */}
         <div className="relative">
-          {/* Glowing vertical line — draws as you scroll */}
           <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-px">
             <div className="absolute inset-0 bg-white/5" />
             <motion.div
@@ -141,7 +134,6 @@ export function LightPath() {
             />
           </div>
 
-          {/* Steps */}
           <div className="space-y-24">
             {STEPS.map((step, i) => {
               const Icon = step.icon;
@@ -156,7 +148,6 @@ export function LightPath() {
                   transition={{ duration: 0.8, ease: EASE }}
                 >
                   <div className="flex-1" />
-                  {/* Node on the path */}
                   <div className="relative shrink-0">
                     <motion.div
                       className="w-14 h-14 rounded-full flex items-center justify-center"
@@ -176,7 +167,7 @@ export function LightPath() {
                     <h3 className="text-lg font-semibold text-atelier-white mb-1">{step.title}</h3>
                     <p className="text-sm text-atelier-white-soft/50 font-light">{step.desc}</p>
                     <span className="text-3xs font-mono tracking-[0.2em] uppercase mt-2 block" style={{ color: step.color }}>
-                      Step {String(i + 1).padStart(2, '0')}
+                      {t.step} {String(i + 1).padStart(2, '0')}
                     </span>
                   </div>
                 </motion.div>
@@ -189,10 +180,8 @@ export function LightPath() {
   );
 }
 
-// ──────────────────────────────────────────────
-// TESTIMONIAL WALL — rotating gallery of framed portraits
-// ──────────────────────────────────────────────
 export function TestimonialWall() {
+  const { t, isRTL } = useI18n();
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
 
@@ -205,8 +194,7 @@ export function TestimonialWall() {
   }, [paused]);
 
   return (
-    <section className="relative py-32 px-4 lg:px-6 overflow-hidden">
-      {/* Ambient light */}
+    <section className="relative py-32 px-4 lg:px-6 overflow-hidden" dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse 50% 60% at 50% 50%, rgba(123,92,255,0.04) 0%, transparent 70%)' }} />
 
       <div className="max-w-4xl mx-auto relative">
@@ -218,7 +206,7 @@ export function TestimonialWall() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, ease: EASE }}
           >
-            Voices from the Gallery
+            {t.voicesLabel}
           </motion.span>
           <motion.h2
             className="font-display font-bold tracking-display text-atelier-white"
@@ -228,11 +216,10 @@ export function TestimonialWall() {
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: EASE }}
           >
-            What creators say
+            {t.voicesTitle}
           </motion.h2>
         </div>
 
-        {/* Framed portrait carousel */}
         <div
           className="relative min-h-[280px] flex items-center justify-center"
           onMouseEnter={() => setPaused(true)}
@@ -247,14 +234,12 @@ export function TestimonialWall() {
               exit={{ opacity: 0, scale: 0.95, y: -20 }}
               transition={{ duration: 0.7, ease: EASE }}
             >
-              {/* Spotlight behind */}
               <div
                 className="absolute inset-0 -z-10 rounded-3xl"
                 style={{ background: 'radial-gradient(ellipse 60% 80% at 50% 30%, rgba(123,92,255,0.06) 0%, transparent 70%)' }}
               />
 
               <div className="glass-card rounded-3xl p-8 md:p-10 relative overflow-hidden">
-                {/* Frame glow */}
                 <div className="absolute inset-0 rounded-3xl" style={{ border: '1px solid rgba(123,92,255,0.1)' }} />
 
                 <Quote size={28} className="text-atelier-violet/30 mb-4" />
@@ -281,7 +266,6 @@ export function TestimonialWall() {
             </motion.div>
           </AnimatePresence>
 
-          {/* Progress dots */}
           <div className="flex gap-2 mt-8 justify-center">
             {reviews.map((_, i) => (
               <button
@@ -301,21 +285,19 @@ export function TestimonialWall() {
   );
 }
 
-// ──────────────────────────────────────────────
-// PRICING VAULTS — glowing tier cards
-// ──────────────────────────────────────────────
-const TIERS = [
-  { name: 'Starter', price: '$0', period: 'forever', color: '#7C7A9E', glow: 0.15, features: ['Browse all assets', '3 free downloads / month', 'Community access'], popular: false },
-  { name: 'Creator', price: '$19', period: '/month', color: '#7B5CFF', glow: 0.3, features: ['Unlimited downloads', 'All categories unlocked', 'Commercial license', 'Priority support'], popular: true },
-  { name: 'Studio', price: '$49', period: '/month', color: '#3FE0D0', glow: 0.25, features: ['Everything in Creator', '5 team seats', 'Custom requests', 'Early access assets'], popular: false },
-  { name: 'Enterprise', price: 'Custom', period: '', color: '#FFC15E', glow: 0.2, features: ['Everything in Studio', 'Unlimited seats', 'Dedicated manager', 'Custom licensing'], popular: false },
-];
-
 export function PricingVaults() {
   const { navigate } = useApp();
+  const { t, isRTL } = useI18n();
+
+  const TIERS = [
+    { name: t.tierStarter, price: '$0', period: t.tierForever, color: '#7C7A9E', glow: 0.15, features: [t.featBrowse, t.feat3Free, t.featCommunity], popular: false },
+    { name: t.tierCreator, price: '$19', period: t.tierMonth, color: '#7B5CFF', glow: 0.3, features: [t.featUnlimited, t.featAllCat, t.featCommercial, t.featPriority], popular: true },
+    { name: t.tierStudio, price: '$49', period: t.tierMonth, color: '#3FE0D0', glow: 0.25, features: [t.featCreatorPlus, t.feat5Seats, t.featCustomReq, t.featEarly], popular: false },
+    { name: t.tierEnterprise, price: t.tierCustom, period: '', color: '#FFC15E', glow: 0.2, features: [t.featStudioPlus, t.featUnlimitedSeats, t.featManager, t.featCustomLic], popular: false },
+  ];
 
   return (
-    <section className="relative py-32 px-4 lg:px-6 overflow-hidden">
+    <section className="relative py-32 px-4 lg:px-6 overflow-hidden" dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <motion.span
@@ -325,7 +307,7 @@ export function PricingVaults() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, ease: EASE }}
           >
-            Membership Vaults
+            {t.vaultsLabel}
           </motion.span>
           <motion.h2
             className="font-display font-bold tracking-display text-atelier-white"
@@ -335,7 +317,7 @@ export function PricingVaults() {
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: EASE }}
           >
-            Choose your <span className="text-gradient-trio">vault</span>
+            {t.vaultsTitle1} <span className="text-gradient-trio">{t.vaultsTitle2}</span>
           </motion.h2>
         </div>
 
@@ -357,7 +339,7 @@ export function PricingVaults() {
               {tier.popular && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                   <span className="text-3xs font-mono uppercase tracking-wider px-3 py-1 rounded-full" style={{ background: tier.color, color: '#000', boxShadow: `0 0 15px ${tier.color}50` }}>
-                    Most Popular
+                    {t.tierPopular}
                   </span>
                 </div>
               )}
@@ -373,7 +355,7 @@ export function PricingVaults() {
                   <motion.div
                     key={feat}
                     className="flex items-center gap-2"
-                    initial={{ opacity: 0, x: -10 }}
+                    initial={{ opacity: 0, x: isRTL ? 10 : -10 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.1 + j * 0.05, duration: 0.4 }}
@@ -393,7 +375,7 @@ export function PricingVaults() {
                   border: tier.popular ? 'none' : '1px solid rgba(255,255,255,0.08)',
                 }}
               >
-                {tier.price === 'Custom' ? 'Contact Sales' : 'Get Started'}
+                {tier.price === t.tierCustom ? t.tierContact : t.tierGetStarted}
               </button>
             </motion.div>
           ))}
@@ -403,15 +385,12 @@ export function PricingVaults() {
   );
 }
 
-// ──────────────────────────────────────────────
-// FINAL CTA — closing cinematic moment
-// ──────────────────────────────────────────────
 export function FinalCTA() {
   const { navigate } = useApp();
+  const { t, isRTL } = useI18n();
 
   return (
-    <section className="relative py-40 px-4 lg:px-6 overflow-hidden">
-      {/* Warming color shift */}
+    <section className="relative py-40 px-4 lg:px-6 overflow-hidden" dir={isRTL ? 'rtl' : 'ltr'}>
       <motion.div
         className="absolute inset-0"
         initial={{ opacity: 0 }}
@@ -445,9 +424,13 @@ export function FinalCTA() {
           viewport={{ once: true }}
           transition={{ duration: 1, ease: EASE }}
         >
-          Your journey
+          {t.finalTitle1}
           <br />
-          starts <span className="text-gradient-trio">here</span>
+          {t.finalTitle2.includes('here') ? (
+            <>starts <span className="text-gradient-trio">here</span></>
+          ) : (
+            <span className="text-gradient-trio">{t.finalTitle2}</span>
+          )}
         </motion.h2>
 
         <motion.p
@@ -457,7 +440,7 @@ export function FinalCTA() {
           viewport={{ once: true }}
           transition={{ delay: 0.3, duration: 0.8, ease: EASE }}
         >
-          Step through the portal. The atelier is open.
+          {t.finalSub}
         </motion.p>
 
         <motion.div
@@ -468,8 +451,8 @@ export function FinalCTA() {
           transition={{ delay: 0.5, duration: 0.8, ease: EASE }}
         >
           <MagneticButton onClick={() => navigate('/products')} variant="primary" className="text-base px-8 py-4">
-            Enter the Gallery
-            <ArrowRight size={18} />
+            {t.finalCta}
+            <ArrowRight size={18} className={isRTL ? 'rotate-180' : ''} />
           </MagneticButton>
         </motion.div>
       </div>
@@ -477,16 +460,20 @@ export function FinalCTA() {
   );
 }
 
-// ──────────────────────────────────────────────
-// EXIT PORTAL — footer styled as closing portal
-// ──────────────────────────────────────────────
 export function ExitPortal() {
   const { navigate } = useApp();
+  const { t, isRTL } = useI18n();
   const [email, setEmail] = useState('');
 
+  const FOOTER_LINKS = [
+    { title: t.footerExplore, links: [[t.footerProducts, '/products'], [t.footerCategories, '/categories'], [t.footerServices, '/services'], [t.footerPricing, '/pricing']] },
+    { title: t.footerCompany, links: [[t.footerAbout, '/about'], [t.footerBlog, '/blog'], [t.footerContact, '/contact'], [t.footerCareers, '/about']] },
+    { title: t.footerSupport, links: [[t.footerHelp, '/support'], [t.footerFaq, '/faq'], [t.footerPrivacy, '/privacy'], [t.footerTerms, '/terms']] },
+    { title: t.footerAccount, links: [[t.footerLogin, '/login'], [t.footerSignup, '/signup'], [t.footerDashboard, '/dashboard'], [t.footerWishlist, '/wishlist']] },
+  ];
+
   return (
-    <footer className="relative pt-24 pb-12 px-4 lg:px-6 overflow-hidden">
-      {/* Closing radial glow frame */}
+    <footer className="relative pt-24 pb-12 px-4 lg:px-6 overflow-hidden" dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div
           className="w-[800px] h-[800px] rounded-full"
@@ -498,42 +485,36 @@ export function ExitPortal() {
       </div>
 
       <div className="max-w-5xl mx-auto relative z-10">
-        {/* Newsletter */}
         <div className="text-center mb-20">
           <h3 className="font-display text-2xl font-bold text-atelier-white mb-3">
-            Join the <span className="text-gradient-violet">atelier</span>
+            {t.footerJoin} <span className="text-gradient-violet">{t.footerJoinTitle}</span>
           </h3>
           <p className="text-sm text-atelier-muted mb-6 font-light">
-            Get notified when new artifacts arrive. No noise, just craft.
+            {t.footerSub}
           </p>
           <form
             onSubmit={(e) => { e.preventDefault(); setEmail(''); }}
             className="flex items-center gap-2 max-w-md mx-auto"
           >
             <div className="flex-1 relative">
-              <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-atelier-muted" />
+              <Mail size={16} className="absolute top-1/2 -translate-y-1/2 text-atelier-muted" style={isRTL ? { right: 12 } : { left: 12 }} />
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="your@email.com"
-                className="w-full glass rounded-full pl-10 pr-4 py-3 text-sm text-atelier-white placeholder:text-atelier-muted/50 focus:outline-none focus:border-atelier-violet/30 transition-colors"
+                placeholder={t.footerPlaceholder}
+                className="w-full glass rounded-full py-3 text-sm text-atelier-white placeholder:text-atelier-muted/50 focus:outline-none focus:border-atelier-violet/30 transition-colors"
+                style={isRTL ? { paddingRight: 40, paddingLeft: 16 } : { paddingLeft: 40, paddingRight: 16 }}
               />
             </div>
             <button type="submit" className="px-5 py-3 rounded-full bg-atelier-violet text-white text-sm font-medium hover:shadow-glow-violet transition-all duration-500">
-              Subscribe
+              {t.footerSubscribe}
             </button>
           </form>
         </div>
 
-        {/* Links grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
-          {[
-            { title: 'Explore', links: [['All Products', '/products'], ['Categories', '/categories'], ['Services', '/services'], ['Pricing', '/pricing']] },
-            { title: 'Company', links: [['About', '/about'], ['Blog', '/blog'], ['Contact', '/contact'], ['Careers', '/about']] },
-            { title: 'Support', links: [['Help Center', '/support'], ['FAQ', '/faq'], ['Privacy', '/privacy'], ['Terms', '/terms']] },
-            { title: 'Account', links: [['Login', '/login'], ['Sign Up', '/signup'], ['Dashboard', '/dashboard'], ['Wishlist', '/wishlist']] },
-          ].map((col) => (
+          {FOOTER_LINKS.map((col) => (
             <div key={col.title}>
               <h4 className="text-3xs font-mono uppercase tracking-[0.2em] text-atelier-muted mb-4">{col.title}</h4>
               <div className="space-y-2.5">
@@ -545,7 +526,7 @@ export function ExitPortal() {
                   >
                     <span className="relative">
                       {label}
-                      <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-atelier-violet transition-all duration-300 group-hover:w-full" />
+                      <span className="absolute -bottom-0.5 w-0 h-px bg-atelier-violet transition-all duration-300 group-hover:w-full" style={isRTL ? { right: 0 } : { left: 0 }} />
                     </span>
                   </button>
                 ))}
@@ -554,7 +535,6 @@ export function ExitPortal() {
           ))}
         </div>
 
-        {/* Bottom bar */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 pt-8 border-t border-white/5">
           <div className="flex items-center gap-2.5">
             <div className="relative w-8 h-8 flex items-center justify-center">
@@ -564,7 +544,7 @@ export function ExitPortal() {
               </div>
             </div>
             <span className="text-sm font-bold tracking-tightest text-atelier-white font-display">NOVIXA</span>
-            <span className="text-2xs text-atelier-muted ml-2 font-mono">© 2026 The Infinite Atelier</span>
+            <span className="text-2xs text-atelier-muted mx-2 font-mono">{t.footerRights}</span>
           </div>
 
           <div className="flex items-center gap-4">

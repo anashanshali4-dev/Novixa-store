@@ -190,7 +190,7 @@ export function PortalLoader({ onComplete }: { onComplete: () => void }) {
       style={{
         opacity: exiting ? 0 : 1,
         transform: exiting ? 'scale(1.1)' : 'scale(1)',
-        clipPath: exiting ? 'circle(150% at 50% 50%)' : 'circle(0% at 50% 50%)',
+        clipPath: exiting ? 'circle(150% at 50% 50%)' : 'circle(150% at 50% 50%)',
       }}
       dir={isRTL ? 'rtl' : 'ltr'}
     >
