@@ -1,9 +1,11 @@
+import { useState, useEffect } from 'react';
 import { AppProvider, useApp } from '@/store/AppContext';
+import { I18nProvider } from '@/i18n/I18nContext';
 import { Header } from '@/components/layout/Header';
-import { Footer } from '@/components/layout/Footer';
 import { SmartSearch } from '@/components/search/SmartSearch';
 import { CartDrawer } from '@/components/cart/CartDrawer';
 import { AIAssistant } from '@/components/ai/AIAssistant';
+import { CustomCursor, PortalLoader } from '@/components/atelier/AtelierCore';
 
 import { HomePage } from '@/pages/HomePage';
 import { ProductsPage } from '@/pages/ProductsPage';
@@ -23,11 +25,11 @@ import {
 } from '@/pages/DashboardPages';
 import { AdminPage } from '@/pages/AdminPage';
 import { AssistantPage } from '@/pages/AssistantPage';
+import { ExitPortal } from '@/components/atelier/AtelierSections';
 
 function Router() {
   const { route } = useApp();
 
-  // Parse route
   if (route === '/') return <HomePage />;
   if (route === '/products') return <ProductsPage />;
   if (route.startsWith('/product/')) return <ProductDetailsPage productId={route.replace('/product/', '')} />;
@@ -61,15 +63,27 @@ function Router() {
 function AppContent() {
   const { route } = useApp();
   const isAuthPage = route === '/login' || route === '/signup';
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (loading) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+  }, [loading]);
 
   return (
-    <div className="relative min-h-screen bg-novixa-bg">
-      <div className="noise-overlay" />
+    <div className="relative min-h-screen bg-atelier-void">
+      {loading && <PortalLoader onComplete={() => setLoading(false)} />}
+      <div className="film-grain" />
+      <CustomCursor />
       {!isAuthPage && <Header />}
       <main>
         <Router />
       </main>
-      {!isAuthPage && <Footer />}
+      {!isAuthPage && route === '/' && <ExitPortal />}
+      {!isAuthPage && route !== '/' && <ExitPortal />}
       {/* Global overlays */}
       <SmartSearch />
       <CartDrawer />
@@ -80,8 +94,10 @@ function AppContent() {
 
 export default function App() {
   return (
-    <AppProvider>
-      <AppContent />
-    </AppProvider>
+    <I18nProvider>
+      <AppProvider>
+        <AppContent />
+      </AppProvider>
+    </I18nProvider>
   );
 }
